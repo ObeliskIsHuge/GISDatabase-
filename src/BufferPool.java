@@ -85,11 +85,20 @@ public class BufferPool {
     /***
      * Removes a record from the linked list
      * @param record that will be removed
-     * @return record that was removed
-     *         null if the record doesn't exist
+     * @return true if the record was deleted
+     *         false otherwise
      */
-    public GISRecord remove(GISRecord record){
-        return null; //TODO may be unnecessary
+    public boolean remove(GISRecord record){
+
+        int index = pool.indexOf(record);
+        // Will be true when the record exists in the pool
+        if(index != -1){
+            currentSize--;
+            pool.remove(index);
+            return true;
+        }
+
+        return false;
     }
 
 
