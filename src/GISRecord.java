@@ -424,4 +424,25 @@ public class GISRecord {
         return false;
     }
 
+
+    /****
+     * Creates a hash code of the current GISRecord
+     * @return hashcode of the GIS record
+     */
+    @Override
+    public int hashCode(){
+
+        String concateString = this.fName + this.sAC;
+        int h = 0;
+        int g;
+        for( int i = 0; i < concateString.length( ); i++ ) {
+            h = (h<<4) + concateString.charAt( i );
+            g = h & 0xf0000000;
+            if( g != 0 )
+                h ^= g >> 24;
+            h &= ~g;
+        }
+        return h & 0x7fffffff;
+    }
+
 }
