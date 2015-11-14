@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  *
  * Class is used to hold data that will be used to
@@ -11,10 +13,9 @@ public class HashTuple {
     // GISRecord
     private GISRecord record;
     // Offset that the GISRecord resides in the database file
-    private int offset;
+    private ArrayList<Integer> offsets;
     // Determines if the value is a tombstone or not
     private boolean tombStone;
-
 
     /****
      * Instantiates the class
@@ -23,7 +24,8 @@ public class HashTuple {
      */
     public HashTuple(GISRecord pRecord , int pOffset){
         this.record = pRecord;
-        this.offset = pOffset;
+        this.offsets = new ArrayList<>();
+        this.offsets.add(pOffset);
         this.tombStone = false;
     }
 
@@ -36,16 +38,28 @@ public class HashTuple {
     }
 
     /***
-     * Returns the file offset of the GISRecord
-     * @return file offset
+     * Returns the file offsets of the GISRecord
+     * @return file offsets
      */
-    public int getOffset() {
-        return offset;
+    public ArrayList<Integer> getOffsets() {
+        return offsets;
     }
 
+
+    /***
+     * Adds a file offset to the offsets
+     * @param offset that will be added to the collection
+     */
+    public void addToOffset(int offset){
+        this.offsets.add(offset);
+    }
+
+    /***
+     * Changes the HashTuple to a tombstone
+     */
     public void changeToTombStone(){
         this.record = null;
-        this.offset = -1;
+        this.offsets = null;
         this.tombStone = true;
     }
 
