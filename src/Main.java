@@ -5,6 +5,19 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
+
+        // Checks to see if the correct amount of arguments is given
+        if(args.length != 3){
+            System.out.println("Incorrect amount of arguments given.");
+        } else {
+            // Gets the gis Record and command file paths
+            String gisRecordPath = args[0];
+            String commandFilePath = args[1];
+        }
+
+        // Processes the command file
+//        Processing process = new Processing(gisRecordPath , commandFilePath);
+//        process.processFiles();
     }
 }
 

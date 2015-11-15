@@ -431,18 +431,27 @@ public class GISRecord {
      */
     @Override
     public int hashCode(){
-
+        //TODO
         String concateString = this.fName + this.sAC;
-        int h = 0;
-        int g;
-        for( int i = 0; i < concateString.length( ); i++ ) {
-            h = (h<<4) + concateString.charAt( i );
-            g = h & 0xf0000000;
-            if( g != 0 )
-                h ^= g >> 24;
-            h &= ~g;
+        int hashValue = 0;
+        for (int Pos = 0; Pos < concateString.length(); Pos++) { // use all elements
+            hashValue = (hashValue << 4) + concateString.charAt(Pos); // shift/mix
+//            long hiBits = hashValue & 0xF000000000000000; // get high nybble todo this is what it should be
+            long hiBits = hashValue & 0xF0000000; // get high nybble
+            if (hiBits != 0)
+                hashValue ^= hiBits >> 56; // xor high nybble with second nybble
+            hashValue &= ~hiBits; // clear high nybble
         }
-        return h & 0x7fffffff;
+        return hashValue;
+    }
+
+
+    /***
+     * Builds a GeoCoordinate from the relevant data
+     * @return GeoCoordinate with the relevant data
+     */
+    public GeoCoordinate buildCoordinates(){
+        return new GeoCoordinate(this.pLatitudeDMS , this.pLongitudeDMS);
     }
 
 }

@@ -105,14 +105,17 @@ public class HashTable<T>{
             int hashIndex = gRecord.hashCode() % this.tableSize;
 
             // Will be true when the index doesn't exist
-            if(this.table[hashIndex] == null){
+            if(this.table[hashIndex] == null) {
                 return null;
+                // Will be true when the records are equal
+            }else if (this.table[hashIndex].equals(record)){
+                return record;
+                // Begins the prob sequence
             } else {
                 int sequence = 1;
                 int probeIndex;
                 boolean found = false;
-
-
+                T returnValue = null;
                 // Will run until a location is found
                 while(!found){
 
@@ -120,17 +123,19 @@ public class HashTable<T>{
                     // Will be true when we've finally found a location
                     if(table[probeIndex] == null){
                         found = true;
-                        return null;
+                        returnValue = null;
                     } else {
 
                         HashTuple testTuple = (HashTuple)table[probeIndex];
                         // Will be true when the records are equal
                         if(testTuple.equals(tuple)){
-                            return record;
+                            returnValue = record;
+                            found = true;
                         }
                         sequence++;
                     }
                 }
+                return returnValue;
             }
         }
         return null;

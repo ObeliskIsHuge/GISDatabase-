@@ -12,9 +12,9 @@ public class GeoCoordinate {
     // Holds the Primary Longitude
     private String pLongitude;
     // Holds the converted latitude to seconds
-    private int latitudeInSec;
+    private long latitudeInSec;
     // Holds the converted longitude to seconds
-    private int longitudeInSec;
+    private long longitudeInSec;
 
 
     /***
@@ -44,7 +44,7 @@ public class GeoCoordinate {
      * Returns the Longitude in seconds
      * @return longitude in seconds
      */
-    public int getLongitudeInSec() {
+    public long getLongitudeInSec() {
         return longitudeInSec;
     }
 
@@ -52,7 +52,7 @@ public class GeoCoordinate {
      * Returns the latitude in seconds
      * @return latitude in seconds
      */
-    public int getLatitudeInSec() {
+    public long getLatitudeInSec() {
         return latitudeInSec;
     }
 
@@ -85,9 +85,9 @@ public class GeoCoordinate {
             latDays = "" + latDays.charAt(1);
         }
 
-        int iSeconds = Integer.parseInt(latSeconds);
-        int iMinutes = Integer.parseInt(latMinutes);
-        int iDays = Integer.parseInt(latDays);
+        long iSeconds = Integer.parseInt(latSeconds);
+        long iMinutes = Integer.parseInt(latMinutes);
+        long iDays = Integer.parseInt(latDays);
         this.latitudeInSec = (iDays * 3600) + (iMinutes * 60) + iSeconds;
 
         /*---------------------  Handles the longitude ---------------------------*/

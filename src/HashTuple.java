@@ -45,6 +45,14 @@ public class HashTuple {
         return offsets;
     }
 
+    /***
+     * Returns the single offset in the array
+     * @return single offset
+     */
+    public int getSigleOffset(){
+        return offsets.get(0);
+    }
+
 
     /***
      * Adds a file offset to the offsets
