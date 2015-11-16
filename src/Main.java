@@ -1,23 +1,27 @@
+import java.io.IOException;
+import java.util.Arrays;
+
 /*****
  * Class that runs the
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 	// write your code here
 
         // Checks to see if the correct amount of arguments is given
         if(args.length != 3){
             System.out.println("Incorrect amount of arguments given.");
+            System.out.println("Given: " + args.length);
+            System.out.println(Arrays.toString(args));
         } else {
             // Gets the gis Record and command file paths
             String gisRecordPath = args[0];
             String commandFilePath = args[1];
+            String logFilePath = args[2];
+            Process process = new Process(gisRecordPath, commandFilePath, logFilePath);
+            process.processFiles();
         }
-
-        // Processes the command file
-//        Processing process = new Processing(gisRecordPath , commandFilePath);
-//        process.processFiles();
     }
 }
 

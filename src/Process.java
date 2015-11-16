@@ -54,7 +54,7 @@ public class Process {
 
             String[] pieces = commandLine.split("\\t");
             // Skip all the comments
-            if(!pieces[0].equals(";")){
+            if(commandLine.charAt(0) != ';'){
 
                 logFile.printLine(commandLine);
                 // Decides which action to take
@@ -79,12 +79,8 @@ public class Process {
                     default:
                         System.out.println("Something didn't work");
                         break;
-
                 }
-
-
             }
-
             commandLine = commandFile.readLine();
         }
 
@@ -129,7 +125,7 @@ public class Process {
         // Will run until the file has been fully processed
         while (line != null){
 
-            lineParser = new LineParser((databaseFile.readLine()));
+            lineParser = new LineParser((line));
             offset = databaseFile.getFilePointer();
             record = lineParser.buildGISRecord();
 
@@ -146,6 +142,8 @@ public class Process {
                 quadTree.insert(tuple);
                 numberOfRecords++;
             }
+
+            line = databaseFile.readLine();
         }
 
         logFile.printLine("Number of entries added: " + numberOfRecords);
