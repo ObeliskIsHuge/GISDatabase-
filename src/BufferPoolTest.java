@@ -29,8 +29,8 @@ public class BufferPoolTest {
         GISRecord recordTwo = new GISRecord();
         recordTwo.setfName("Lane Stadium");
         recordTwo.setsAC("VA");
-        recordTwo.setpLatitudeDMS("371312N");
-        recordTwo.setpLatitudeDMS("0802505W");
+        recordTwo.setpLatitudeDMS("371312S");
+        recordTwo.setpLongitudeDMS("0802505E");
 
 
         GISRecord recordThree = new GISRecord();
@@ -62,6 +62,16 @@ public class BufferPoolTest {
         assertFalse(bufferPool.exists(recordOne));
         assertFalse(bufferPool.exists(recordTwo));
         assertFalse(bufferPool.exists(recordThree));
+
+
+        // Test GeoCoordinates
+        GeoCoordinate coordinate = recordOne.buildCoordinates();
+        assertEquals(133798, coordinate.getLatitudeInSec());
+        assertEquals(-289505, coordinate.getLongitudeInSec());
+
+        GeoCoordinate coordinatesTwo = recordTwo.buildCoordinates();
+        assertEquals(-133992, coordinatesTwo.getLatitudeInSec());
+        assertEquals(289505, coordinatesTwo.getLongitudeInSec());
 
     }
 }

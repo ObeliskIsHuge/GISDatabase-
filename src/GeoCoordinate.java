@@ -110,7 +110,7 @@ public class GeoCoordinate {
         String longSeconds;
         String longMinutes;
         String longDays;
-        int longLineLength = latStringBuilder.length();
+        int longLineLength = longStringBuilder.length();
 
         /* Handles the conversion of latitude first */
         longSeconds = longStringBuilder.substring(longLineLength - 3 , longLineLength - 1);
@@ -134,7 +134,7 @@ public class GeoCoordinate {
         iMinutes = Integer.parseInt(longMinutes);
         iDays = Integer.parseInt(longDays);
 
-        directionChar = longStringBuilder.charAt(lineLength - 1);
+        directionChar = longStringBuilder.charAt(longLineLength - 1);
         // Determines if the values should be negative or not
         switch (directionChar){
             case 'E':
