@@ -50,17 +50,19 @@ public class HashTable<T>{
      * @param insertRecord record that will be inserted
      */
     @SuppressWarnings("unchecked")
-    public void insert(T insertRecord){
+    public int insert(T insertRecord){
 
         // Checks to see if insertRecord is a GISRecord
         if(insertRecord instanceof HashTuple){
 
+            int probeSequenceCount;
             HashTuple tuple = (HashTuple)insertRecord;
             int hashIndex = tuple.getRecord().hashCode() % this.tableSize;
 
             // Will be true when the index is empty
             if(table[hashIndex] == null){
                 table[hashIndex] = (T)tuple;
+                return 0;
                 // Begin prob sequence
             } else{
 
@@ -80,13 +82,18 @@ public class HashTable<T>{
                         sequence++;
                     }
                 }
+                probeSequenceCount = sequence;
             }
             fillCount++;
             // Checks to see if it's time to resize the array
             if(fillCount >= resizeCount){
                 reSizeAndRehash();
             }
+
+            return probeSequenceCount;
         }
+
+        return 0;
     }
 
     /****

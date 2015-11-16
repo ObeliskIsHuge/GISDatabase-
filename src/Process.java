@@ -56,6 +56,7 @@ public class Process {
             // Skip all the comments
             if(!pieces[0].equals(";")){
 
+                logFile.printLine(commandLine);
                 // Decides which action to take
                 switch(pieces[0]){
                     case "world":
@@ -80,6 +81,7 @@ public class Process {
                         break;
 
                 }
+
 
             }
 
@@ -121,6 +123,9 @@ public class Process {
         GISRecord record;
         LineParser lineParser;
         HashTuple tuple;
+        int largestProbSequence = 0;
+        int currentSequence;
+        int numberOfRecords = 0;
         // Will run until the file has been fully processed
         while (line != null){
 
@@ -131,14 +136,23 @@ public class Process {
             // Will be true when the record is in bounds
             if(quadTree.inBounds(record.buildCoordinates())){
                 tuple = new HashTuple(record, offset);
-                hashTable.insert(tuple);
+                currentSequence = hashTable.insert(tuple);
+
+                // Updates the sequence count if the currentSequence is larger
+                if(currentSequence > largestProbSequence){
+                    largestProbSequence = currentSequence;
+                }
+
                 quadTree.insert(tuple);
+                numberOfRecords++;
             }
         }
 
+        logFile.printLine("Number of entries added: " + numberOfRecords);
+        logFile.printLine("Largest Probe sequence: " + largestProbSequence + "\n");
+
         // Reset the file's position
         databaseFile.seek(0);
-        // TODO
     }
 
     /***
