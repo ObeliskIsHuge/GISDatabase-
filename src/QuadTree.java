@@ -60,6 +60,33 @@ public class QuadTree<T> {
             this.buckets = new ArrayList<>();
         }
 
+        /***
+         * Returns the size of the leaf
+         * @return size of the leaf
+         */
+        public int getLeafSize(){
+            return leafSize;
+        }
+
+        /***
+         * Returns the buckets
+         * @return returned bucket
+         */
+        public ArrayList<T> getBuckets(){
+            return buckets;
+        }
+
+
+        /***
+         * Adds values to the bucket
+         * @param tuple value that will be added
+         */
+        @SuppressWarnings("unchecked")
+        private void addToBucket(HashTuple tuple){
+            this.buckets.add((T)tuple);
+            this.leafSize++;
+        }
+
         /****
          * Inserts a record into the QuadLeaf
          *
@@ -119,6 +146,36 @@ public class QuadTree<T> {
 
             return this;
         }
+
+        /***
+         * Returns the Node that contains the
+         * @param coordinate coordinate that will be printed
+         * @return node that contains the coordinates
+         */
+        public QuadTreeNode<T> find(T coordinate,  long x_low, long x_high, long y_low, long y_high){
+
+            // Will be true only when coordinate is an instance of GeoCoordinate
+            if(coordinate instanceof GeoCoordinate){
+
+                QuadTreeLeaf returnLeaf = new QuadTreeLeaf();
+                GeoCoordinate geoCoordinate = (GeoCoordinate) coordinate;
+
+                // iterates over the entire bucket array
+                for(T inputTuple: this.buckets){
+                    HashTuple tuple = (HashTuple) inputTuple;
+
+                    if(tuple.compareCoordinate(geoCoordinate)){
+                        returnLeaf.addToBucket(tuple);
+                    }
+                }
+
+                // makes sure the leaf has values
+                if(returnLeaf.getLeafSize() != 0){
+                    return returnLeaf;
+                }
+            }
+            return null;
+        }
     }
 
 
@@ -153,7 +210,7 @@ public class QuadTree<T> {
          * Sets the North West Node
          * @param northWest new NorthWest Node
          */
-        public void setNorthWest(QuadTreeNode northWest) {
+        public void setNorthWest(QuadTreeNode<T> northWest) {
             this.northWest = northWest;
         }
 
@@ -161,7 +218,7 @@ public class QuadTree<T> {
          * Sets the North East Node
          * @param northEast new NorthEast Node
          */
-        public void setNorthEast(QuadTreeNode northEast) {
+        public void setNorthEast(QuadTreeNode<T> northEast) {
             this.northEast = northEast;
         }
 
@@ -169,7 +226,7 @@ public class QuadTree<T> {
          * Sets the South East Node
          * @param southEast new SouthEast Node
          */
-        public void setSouthEast(QuadTreeNode southEast) {
+        public void setSouthEast(QuadTreeNode<T> southEast) {
             this.southEast = southEast;
         }
 
@@ -177,7 +234,7 @@ public class QuadTree<T> {
          * Sets the South West Node
          * @param southWest new SouthWest Node
          */
-        public void setSouthWest(QuadTreeNode southWest) {
+        public void setSouthWest(QuadTreeNode<T> southWest) {
             this.southWest = southWest;
         }
 
@@ -208,15 +265,25 @@ public class QuadTree<T> {
          * @param yHigh highest y-value
          * @return Direction that the record should be inserted
          */
-        private Direction whichDirection(GISRecord record, long xLow, long xHigh, long yLow, long yHigh){
+        private Direction whichDirection(GISRecord record, GeoCoordinate coordinate,  long xLow, long xHigh,
+                                         long yLow, long yHigh){
 
-            long longitude = record.buildCoordinates().getLongitudeInSec();
-            long latitude = record.buildCoordinates().getLatitudeInSec();
+            long longitude;
+            long latitude;
+
+            // Will be true when record wasn't passed
+            if(record != null) {
+                longitude = record.buildCoordinates().getLongitudeInSec();
+                latitude = record.buildCoordinates().getLatitudeInSec();
+            } else {
+                longitude = coordinate.getLongitudeInSec();
+                latitude = coordinate.getLatitudeInSec();
+            }
 
             long xCenter = (xLow + xHigh) / 2;
             long yCenter = (yLow + yHigh) / 2;
 
-            // Checks to seee if the point lies on the origin
+            // Checks to see if the point lies on the origin
             if(longitude == xCenter && latitude == yCenter){
                 return Direction.NE;
                 // North East
@@ -255,7 +322,7 @@ public class QuadTree<T> {
                 HashTuple tuple = (HashTuple) record;
                 long xCenter = (xLow + xHigh) / 2;
                 long yCenter = (yLow + yHigh) / 2;
-                Direction recordDirection = whichDirection(tuple.getRecord(), xLow, xHigh, yLow, yHigh);
+                Direction recordDirection = whichDirection(tuple.getRecord(), null, xLow, xHigh, yLow, yHigh);
 
                 // Determines which action to take TODO THESE MIGHT NEED TO BE CHANGED
                 switch (recordDirection){
@@ -274,12 +341,51 @@ public class QuadTree<T> {
                     default:
                         // Do Nothing
                         break;
-
                 }
 
             }
 
             return this;
         }
+
+        /****
+         * Searches the Node for values that match the GeoCoordinate
+         * @param coordinate coordinate that will be printed
+         * @return Node that contains the records at the given coordinate
+         */
+        public QuadTreeNode<T> find(T coordinate,  long xLow, long xHigh, long yLow, long yHigh){
+
+            QuadTreeNode<T> returnNode = null;
+            // Will only be true if the coordinate is a GeoCoordinate
+            if(coordinate instanceof GeoCoordinate){
+
+                GeoCoordinate geoCoordinate = (GeoCoordinate) coordinate;
+                long xCenter = (xLow + xHigh) / 2;
+                long yCenter = (yLow + yHigh) / 2;
+
+                Direction recordDirection = whichDirection(null, geoCoordinate, xLow, xHigh, yLow, yHigh);
+                switch (recordDirection){
+                    case NE:
+                        returnNode = find(coordinate, xCenter, xHigh, yCenter, yHigh);
+                        break;
+                    case NW:
+                        returnNode = find(coordinate, xLow, xCenter, yCenter, yHigh);
+                        break;
+                    case SW:
+                        returnNode = find(coordinate, xLow, xCenter, yLow, yCenter);
+                        break;
+                    case SE:
+                        returnNode = find(coordinate, xCenter, xHigh, yLow, yCenter);
+                        break;
+                    default:
+                        // Do Nothing
+                        break;
+                }
+            }
+            return returnNode;
+        }
+
+
+
     }
 }

@@ -67,6 +67,9 @@ public class GeoCoordinate {
         String latMinutes;
         String latDays;
         int lineLength = latStringBuilder.length();
+        // holds the symbol for direction
+        char directionChar = latStringBuilder.charAt(lineLength - 1);
+
 
         /*---------------------- Handles the conversion of latitude first ------------------------*/
         latSeconds = latStringBuilder.substring(lineLength - 3 , lineLength - 1);
@@ -88,7 +91,19 @@ public class GeoCoordinate {
         long iSeconds = Integer.parseInt(latSeconds);
         long iMinutes = Integer.parseInt(latMinutes);
         long iDays = Integer.parseInt(latDays);
-        this.latitudeInSec = (iDays * 3600) + (iMinutes * 60) + iSeconds;
+        // Determines if the values should be negative or not
+        switch (directionChar){
+            case 'N':
+                this.latitudeInSec = (iDays * 3600) + (iMinutes * 60) + iSeconds;
+                break;
+            case 'S':
+                this.latitudeInSec = 0 - ((iDays * 3600) + (iMinutes * 60) + iSeconds);
+                break;
+            default:
+                // Do nothing
+                break;
+        }
+
 
         /*---------------------  Handles the longitude ---------------------------*/
         StringBuilder longStringBuilder = new StringBuilder(this.pLongitude);
@@ -118,7 +133,20 @@ public class GeoCoordinate {
         iSeconds = Integer.parseInt(longSeconds);
         iMinutes = Integer.parseInt(longMinutes);
         iDays = Integer.parseInt(longDays);
-        this.longitudeInSec = (iDays * 3600) + (iMinutes * 60) + iSeconds;
+
+        directionChar = longStringBuilder.charAt(lineLength - 1);
+        // Determines if the values should be negative or not
+        switch (directionChar){
+            case 'E':
+                this.longitudeInSec = (iDays * 3600) + (iMinutes * 60) + iSeconds;
+                break;
+            case 'W':
+                this.longitudeInSec = 0 - ((iDays * 3600) + (iMinutes * 60) + iSeconds);
+                break;
+            default:
+                // Do nothing
+                break;
+        }
     }
 
 

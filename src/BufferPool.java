@@ -19,7 +19,7 @@ public class BufferPool {
      * Class Constructor
      */
     public BufferPool(){
-        pool = null;
+        pool = new LinkedList<>();
         currentSize = 0;
         maxSize = 10;
     }

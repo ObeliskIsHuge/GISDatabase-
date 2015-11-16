@@ -12,13 +12,21 @@ public abstract class QuadTreeNode<T> {
      *
      * @param node QuadTree node that is being processed
      * @param record record that will be inserted
-     * @param x_low lowest x-value
-     * @param x_high highest x-value
-     * @param y_low lowest y-value
-     * @param y_high highest y-value
+     * @param xLow lowest x-value
+     * @param xHigh highest x-value
+     * @param yLow lowest y-value
+     * @param yHigh highest y-value
      * @return QuadTreeNode that contains the inserted record
      */
-    public abstract QuadTreeNode<T> insert(QuadTreeNode<T> node, T record, long x_low,
-                                           long x_high, long y_low, long y_high);
+    public abstract QuadTreeNode<T> insert(QuadTreeNode<T> node, T record, long xLow,
+                                           long xHigh, long yLow, long yHigh);
+
+
+    /****
+     * Prints the values that exist at the given Coordinate
+     * @param coordinate coordinate that will be printed
+     * @return Node that contains the records at the coordinate
+     */
+    public abstract QuadTreeNode<T> find(T coordinate,  long xLow, long xHigh, long yLow, long yHigh);
 
 }

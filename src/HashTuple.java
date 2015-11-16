@@ -72,6 +72,23 @@ public class HashTuple {
     }
 
     /***
+     * Will be true when the coordinate equals the coordinate of the tuple
+     * @param comparedGeo coordinate that will be compared
+     * @return true if the coordinates are equal
+     *          false otherwise
+     */
+    public boolean compareCoordinate(GeoCoordinate comparedGeo){
+
+        GeoCoordinate thisCoordinate = this.getRecord().buildCoordinates();
+        // Will only be true when
+        if(thisCoordinate.getLatitudeInSec() == comparedGeo.getLatitudeInSec() &&
+                thisCoordinate.getLongitudeInSec() == comparedGeo.getLongitudeInSec()){
+            return true;
+        }
+        return false;
+    }
+
+    /***
      * Determines if two HashTuples are considered equals
      * @param obj HashTuple that will be compared to
      * @return returns true if the they tuples are equal
