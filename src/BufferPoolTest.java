@@ -73,5 +73,11 @@ public class BufferPoolTest {
         assertEquals(-133992, coordinatesTwo.getLatitudeInSec());
         assertEquals(289505, coordinatesTwo.getLongitudeInSec());
 
+        // test Lat or Long converter
+        assertEquals(133798, Process.latAndLongFormatConvert(coordinate.getpLatitude()));
+        assertEquals(-289505, Process.latAndLongFormatConvert(coordinate.getpLongitude()));
+        assertEquals(-133992, Process.latAndLongFormatConvert(coordinatesTwo.getpLatitude()));
+        assertEquals(289505, Process.latAndLongFormatConvert(coordinatesTwo.getpLongitude()));
+
     }
 }

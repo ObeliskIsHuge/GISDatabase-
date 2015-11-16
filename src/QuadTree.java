@@ -37,8 +37,63 @@ public class QuadTree<T> {
         this.yMax = yMax;
     }
 
+    /***
+     * Sets the y-Max value
+     * @param yMax new y-Max
+     */
+    public void setyMax(long yMax) {
+        this.yMax = yMax;
+    }
+
+    /***
+     * Sets the minimum y value
+     * @param yMin new minimum y value
+     */
+    public void setyMin(long yMin) {
+        this.yMin = yMin;
+    }
+
+    /***
+     * Sets the x-max value
+     * @param xMax maximum x value
+     */
+    public void setxMax(long xMax) {
+        this.xMax = xMax;
+    }
+
+    /***
+     * Sets the minimum x-value
+     * @param xMin minimum x-value
+     */
+    public void setxMin(long xMin) {
+        this.xMin = xMin;
+    }
 
 
+    /***
+     * Determines if a coordinate is in bounds or not
+     * @param coordinate that will be checked
+     * @return true if the coordinate is in bounds
+     *         false otherwise
+     */
+    public boolean inBounds(GeoCoordinate coordinate){
+
+
+        // Will be true when the value is inside the rectangle
+        if(coordinate.getLatitudeInSec() <= yMax && coordinate.getLatitudeInSec() >= yMin &&
+                coordinate.getLongitudeInSec() <= xMax && coordinate.getLongitudeInSec() >= xMin){
+            return true;
+        }
+        return false;
+    }
+
+    /***
+     * Inserts a tuple into the tree
+     * @param tuple tuple that will be inserted
+     */
+    public void insert(T tuple){
+        this.root = root.insert(this.root, tuple, xMin, xMax, yMin, yMax);
+    }
 
     /***
      * Implements a Quad Tree Leaf

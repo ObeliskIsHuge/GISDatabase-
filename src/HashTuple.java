@@ -13,7 +13,7 @@ public class HashTuple {
     // GISRecord
     private GISRecord record;
     // Offset that the GISRecord resides in the database file
-    private ArrayList<Integer> offsets;
+    private ArrayList<Long> offsets;
     // Determines if the value is a tombstone or not
     private boolean tombStone;
 
@@ -22,7 +22,7 @@ public class HashTuple {
      * @param pRecord GISRecord that is being stored
      * @param pOffset location that the record resides in the database
      */
-    public HashTuple(GISRecord pRecord , int pOffset){
+    public HashTuple(GISRecord pRecord , long pOffset){
         this.record = pRecord;
         this.offsets = new ArrayList<>();
         this.offsets.add(pOffset);
@@ -41,7 +41,7 @@ public class HashTuple {
      * Returns the file offsets of the GISRecord
      * @return file offsets
      */
-    public ArrayList<Integer> getOffsets() {
+    public ArrayList<Long> getOffsets() {
         return offsets;
     }
 
@@ -49,7 +49,7 @@ public class HashTuple {
      * Returns the single offset in the array
      * @return single offset
      */
-    public int getSigleOffset(){
+    public long getSigleOffset(){
         return offsets.get(0);
     }
 
@@ -58,7 +58,7 @@ public class HashTuple {
      * Adds a file offset to the offsets
      * @param offset that will be added to the collection
      */
-    public void addToOffset(int offset){
+    public void addToOffset(long offset){
         this.offsets.add(offset);
     }
 
