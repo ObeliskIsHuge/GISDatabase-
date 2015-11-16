@@ -81,9 +81,9 @@ public class HashTable<T>{
                     }
                 }
             }
-            tableSize++;
+            fillCount++;
             // Checks to see if it's time to resize the array
-            if(tableSize >= resizeCount){
+            if(fillCount >= resizeCount){
                 reSizeAndRehash();
             }
         }
