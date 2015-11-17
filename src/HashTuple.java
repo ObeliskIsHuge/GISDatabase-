@@ -89,6 +89,17 @@ public class HashTuple {
     }
 
     /***
+     * Returns a String containing the data
+     * @return String describing the object
+     */
+    @Override
+    public String toString(){
+
+        return "[ " + record.getfName() + ":" + record.getsAC()
+                + ", [" + getSigleOffset() + "]]";
+    }
+
+    /***
      * Determines if two HashTuples are considered equals
      * @param obj HashTuple that will be compared to
      * @return returns true if the they tuples are equal

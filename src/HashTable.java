@@ -46,6 +46,15 @@ public class HashTable<T>{
 
 
     /***
+     * Returns the size of the table
+     * @return size of the table
+     */
+    public int getTableSize(){
+        return tableSize;
+    }
+
+
+    /***
      * Inserts a record into the hash table
      * @param insertRecord record that will be inserted
      */
@@ -145,6 +154,24 @@ public class HashTable<T>{
             }
         }
         return null;
+    }
+
+    /***
+     * Prints the contents of the array
+     * @return contents of the Array
+     */
+    public String buildArrayContents(){
+
+        String returnArray = "";
+
+        for(int i = 0; i < table.length; i++){
+            if(table[i] != null){
+                HashTuple tuple = (HashTuple)table[i];
+                returnArray += i + ": " + tuple.toString() + "\n";
+            }
+        }
+
+        return returnArray;
     }
 
     /****

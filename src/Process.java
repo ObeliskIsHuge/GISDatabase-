@@ -59,7 +59,13 @@ public class Process {
             // Skip all the comments
             if(commandLine.charAt(0) != ';'){
 
-                logFile.printLine(commandLine);
+                // Echos the commands
+                if(pieces[0].equals("world")){
+                    logFile.printLine(commandLine + "\n");
+                } else {
+                    logFile.printLine("Command " + commandCount +": "  +commandLine + "\n");
+                    commandCount++;
+                }
                 // Decides which action to take
                 switch(pieces[0]){
                     case "world":
@@ -165,7 +171,23 @@ public class Process {
      * @param structure data structure that will be printed
      */
     private void processDebug(String structure){
-        System.out.println("Need to figure out Debug");
+
+        String printString;
+        if(structure.equals("quad")){
+            System.out.println("Need to figure out debug for Quad");
+        } else if(structure.equals("hash")){
+
+            // Build header content
+            printString = "Format of display is\n" +
+                    "Slot number: data record\n";
+            printString += "Current table size is " + hashTable.getTableSize() + "\n";
+            printString += "Number of elements in table is " + hashTable.getFillCount() + "\n\n";
+
+            printString += hashTable.buildArrayContents();
+            logFile.printLine(printString);
+        } else {
+            System.out.println("Need to figure out debug for pool");
+        }
     }
 
 
