@@ -158,7 +158,7 @@ public class QuadTree<T> {
                                       long x_high, long y_low, long y_high){
 
             // Will be true when we're working with a Hash tuple
-            if(record instanceof HashTuple && node.getClass().equals(QuadTreeInternal.class)){
+            if(record instanceof HashTuple){
 
                 HashTuple tuple = (HashTuple) record;
                 // Will be true when no values exist
@@ -166,7 +166,7 @@ public class QuadTree<T> {
                     this.buckets.add((T)tuple);
                     leafSize++;
                     // Will be true when we have less than 4 records
-                } else if (leafSize <= MAX_BUCKET_SIZE){
+                } else if (leafSize < MAX_BUCKET_SIZE){
 
                     // Will be true if the current tuple exists in the leaf
                     if(this.buckets.contains((T)tuple)){
@@ -382,16 +382,16 @@ public class QuadTree<T> {
                 // Determines which action to take TODO THESE MIGHT NEED TO BE CHANGED
                 switch (recordDirection){
                     case NE:
-                        setNorthEast(insert(this.northEast, record, xCenter, xHigh, yCenter, yHigh));
+                        setNorthEast(this.northEast.insert(this.northEast, record, xCenter, xHigh, yCenter, yHigh));
                         break;
                     case NW:
-                        setNorthWest(insert(this.northWest, record, xLow, xCenter, yCenter, yHigh));
+                        setNorthWest(this.northWest.insert(this.northWest, record, xLow, xCenter, yCenter, yHigh));
                         break;
                     case SW:
-                        setSouthWest(insert(this.southWest, record, xLow, xCenter, yLow, yCenter));
+                        setSouthWest(this.southWest.insert(this.southWest, record, xLow, xCenter, yLow, yCenter));
                         break;
                     case SE:
-                        setSouthEast(insert(this.southEast, record, xCenter, xHigh, yLow, yCenter));
+                        setSouthEast(this.southEast.insert(this.southEast, record, xCenter, xHigh, yLow, yCenter));
                         break;
                     default:
                         // Do Nothing
