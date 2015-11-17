@@ -13,6 +13,8 @@ public class Process {
     private RandomAccessFile databaseFile;
     // File that contains all the commands
     private RandomAccessFile commandFile;
+    // Database that contains all the data that was imported
+    private RandomAccessFile importedDatabase;
     // File that contains all the output
     private FileOutput logFile;
     // Creates the buffer pool
@@ -33,7 +35,7 @@ public class Process {
     public Process(String databaseFileName, String commandFileName, String logFileName)
             throws FileNotFoundException {
 
-        databaseFile = new RandomAccessFile(databaseFileName, "r");
+        importedDatabase = new RandomAccessFile(databaseFileName, "rw");
         commandFile = new RandomAccessFile(commandFileName, "r");
         logFile = new FileOutput(logFileName);
         bufferPool = new BufferPool();
@@ -48,6 +50,7 @@ public class Process {
     public void processFiles() throws IOException {
 
         String commandLine = commandFile.readLine();
+        int commandCount = 1;
 
         // Keeps running until there aren't any more commands
         while(commandLine != null){
@@ -63,7 +66,7 @@ public class Process {
                         processWorld(pieces[1], pieces[2], pieces[3], pieces[4]);
                         break;
                     case "import":
-                        processImport();
+                        processImport(pieces[1]);
                         break;
                     case "what_is_at":
                         break;
@@ -110,7 +113,10 @@ public class Process {
      * Imports all the records into the database
      * @throws IOException
      */
-    private void processImport() throws IOException {
+    private void processImport(String fileName) throws IOException {
+
+        databaseFile = new RandomAccessFile(fileName, "r");
+
         // Skip the first line
         databaseFile.readLine();
         String line = databaseFile.readLine();
@@ -138,7 +144,7 @@ public class Process {
                 if(currentSequence > largestProbSequence){
                     largestProbSequence = currentSequence;
                 }
-
+                importedDatabase.writeChars(line + "\n");
                 quadTree.insert(tuple);
                 numberOfRecords++;
             }
@@ -151,6 +157,7 @@ public class Process {
 
         // Reset the file's position
         databaseFile.seek(0);
+        importedDatabase.seek(0);
     }
 
     /***

@@ -103,7 +103,6 @@ public class HashTable<T>{
      *         null if the record wasn't found
      */
     public T find(T record){
-//TODO THIS MIGHT NOT WORK.....
         // Checks to see if the record is a hashTuple
         if(record instanceof HashTuple){
 
