@@ -71,6 +71,7 @@ public class HashTable<T>{
             // Will be true when the index is empty
             if(table[hashIndex] == null){
                 table[hashIndex] = (T)tuple;
+                fillCount++;
                 return 0;
                 // Begin prob sequence
             } else{

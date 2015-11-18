@@ -64,7 +64,7 @@ public class Process {
                 if(pieces[0].equals("world")){
                     logFile.printLine(commandLine + "\n");
                 } else {
-                    logFile.printLine("Command " + commandCount +": "  +commandLine + "\n");
+                    logFile.printLine("Command " + commandCount + ": "  +commandLine + "\n");
                     commandCount++;
                 }
                 // Decides which action to take
@@ -79,8 +79,10 @@ public class Process {
                         processWhatIsAt(pieces[1], pieces[2]);
                         break;
                     case "what_is":
+                        processWhatIs(pieces[1], pieces[2]);
                         break;
                     case "what_is_in":
+                        processWhatIsIn();
                         break;
                     case "debug":
                         processDebug(pieces[1]);
@@ -214,6 +216,33 @@ public class Process {
         } else {
             System.out.println("Need to figure out debug for pool");
         }
+    }
+
+    /***
+     * Processes the "What_Is" instruction
+     * @param name is the name that will be processed
+     * @param state is the state
+     */
+    private void processWhatIs(String name, String state){
+
+        GISRecord gisRecord = new GISRecord();
+        gisRecord.setfName(name);
+        gisRecord.setfName(state);
+        HashTuple insertTuple = new HashTuple(gisRecord, 1);
+        HashTuple foundTuple = hashTable.find(insertTuple);
+
+        // Will be true when no record was found
+        if(foundTuple == null){
+            logFile.printLine("Record not found");
+        } else {
+            logFile.printLine(foundTuple.toString());
+        }
+
+    }
+
+
+    private void processWhatIsIn(){
+        logFile.printLine("Need to implement whatIsIn");
     }
 
 
