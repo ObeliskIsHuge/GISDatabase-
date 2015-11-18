@@ -29,4 +29,11 @@ public abstract class QuadTreeNode<T> {
      */
     public abstract QuadTreeNode<T> find(T coordinate,  long xLow, long xHigh, long yLow, long yHigh);
 
+
+    /***
+     * Prints data about the Node
+     * @return String that contains relevant data
+     */
+    public abstract String toString();
+
 }

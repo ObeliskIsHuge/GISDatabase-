@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -75,6 +76,7 @@ public class Process {
                         processImport(pieces[1]);
                         break;
                     case "what_is_at":
+                        processWhatIsAt(pieces[1], pieces[2]);
                         break;
                     case "what_is":
                         break;
@@ -96,6 +98,30 @@ public class Process {
         databaseFile.close();
         commandFile.close();
         logFile.closeFile();
+    }
+
+    /***
+     * Processes the "What_Is_At" command
+     * @param latitude latitude
+     * @param longitude longitude
+     */
+    private void processWhatIsAt(String latitude, String longitude){
+
+        GISRecord gisRecord = new GISRecord();
+        gisRecord.setpLatitudeDMS(latitude);
+        gisRecord.setpLongitudeDMS(longitude);
+        HashTuple insertTuple = new HashTuple(gisRecord, 0);
+        QuadTreeNode node = quadTree.find(insertTuple);
+
+        if(node == null){
+            logFile.printLine("Record not found");
+        } else {
+
+            String data = node.toString();
+            logFile.printLine(data);
+        }
+
+
     }
 
 

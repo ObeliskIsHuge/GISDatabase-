@@ -95,6 +95,18 @@ public class QuadTree<T> {
         this.root = root.insert(this.root, tuple, xMin, xMax, yMin, yMax);
     }
 
+
+    /****
+     * Searches the tree for a record
+     * @param record that will searched for
+     * @return record that matches the coordinates
+     *          null otherwise
+     */
+    public QuadTreeNode<T> find(T record){
+
+        return this.root.find(record, xMin, xMax, yMin, yMax);
+    }
+
     /***
      * Implements a Quad Tree Leaf
      */
@@ -140,6 +152,22 @@ public class QuadTree<T> {
         private void addToBucket(HashTuple tuple){
             this.buckets.add((T)tuple);
             this.leafSize++;
+        }
+
+        /***
+         * Prints data about the node
+         * @return String data
+         */
+        public String toString(){
+
+            String returnString = "";
+            for(T record : buckets){
+                HashTuple tuple = (HashTuple) record;
+                GISRecord gisRecord = tuple.getRecord();
+                returnString += tuple.getSigleOffset() + ": " + gisRecord.getfName()
+                        + " " + gisRecord.getpLatitudeDMS() + " " + gisRecord.getpLongitudeDMS() + "\n";
+            }
+            return returnString;
         }
 
         /****
@@ -204,23 +232,25 @@ public class QuadTree<T> {
 
         /***
          * Returns the Node that contains the
-         * @param coordinate coordinate that will be printed
+         * @param record coordinate that will be printed
          * @return node that contains the coordinates
          */
-        public QuadTreeNode<T> find(T coordinate,  long x_low, long x_high, long y_low, long y_high){
+        public QuadTreeNode<T> find(T record,  long x_low, long x_high, long y_low, long y_high){
 
             // Will be true only when coordinate is an instance of GeoCoordinate
-            if(coordinate instanceof GeoCoordinate){
+            if(record instanceof HashTuple){
 
                 QuadTreeLeaf returnLeaf = new QuadTreeLeaf();
-                GeoCoordinate geoCoordinate = (GeoCoordinate) coordinate;
+                HashTuple tuple = (HashTuple) record;
+//                GeoCoordinate geoCoordinate = (GeoCoordinate) coordinate;
+                GeoCoordinate geoCoordinate =  tuple.getRecord().buildCoordinates();
 
                 // iterates over the entire bucket array
                 for(T inputTuple: this.buckets){
-                    HashTuple tuple = (HashTuple) inputTuple;
+                    HashTuple returnTuple = (HashTuple) inputTuple;
 
-                    if(tuple.compareCoordinate(geoCoordinate)){
-                        returnLeaf.addToBucket(tuple);
+                    if(returnTuple.compareCoordinate(geoCoordinate)){
+                        returnLeaf.addToBucket(returnTuple);
                     }
                 }
 
@@ -379,7 +409,7 @@ public class QuadTree<T> {
                 long yCenter = (yLow + yHigh) / 2;
                 Direction recordDirection = whichDirection(tuple.getRecord(), null, xLow, xHigh, yLow, yHigh);
 
-                // Determines which action to take TODO THESE MIGHT NEED TO BE CHANGED
+                // Determines which action to take
                 switch (recordDirection){
                     case NE:
                         setNorthEast(this.northEast.insert(this.northEast, record, xCenter, xHigh, yCenter, yHigh));
@@ -403,34 +433,43 @@ public class QuadTree<T> {
             return this;
         }
 
+        /***
+         * Prints data about the node
+         * @return String data
+         */
+        public String toString(){
+            return null;
+        }
+
         /****
          * Searches the Node for values that match the GeoCoordinate
-         * @param coordinate coordinate that will be printed
+         * @param record coordinate that will be printed
          * @return Node that contains the records at the given coordinate
          */
-        public QuadTreeNode<T> find(T coordinate,  long xLow, long xHigh, long yLow, long yHigh){
+        public QuadTreeNode<T> find(T record,  long xLow, long xHigh, long yLow, long yHigh){
 
             QuadTreeNode<T> returnNode = null;
             // Will only be true if the coordinate is a GeoCoordinate
-            if(coordinate instanceof GeoCoordinate){
+            if(record instanceof HashTuple){
 
-                GeoCoordinate geoCoordinate = (GeoCoordinate) coordinate;
+                HashTuple tuple = (HashTuple) record;
+                GeoCoordinate geoCoordinate = tuple.getRecord().buildCoordinates();
                 long xCenter = (xLow + xHigh) / 2;
                 long yCenter = (yLow + yHigh) / 2;
 
                 Direction recordDirection = whichDirection(null, geoCoordinate, xLow, xHigh, yLow, yHigh);
                 switch (recordDirection){
                     case NE:
-                        returnNode = find(coordinate, xCenter, xHigh, yCenter, yHigh);
+                        returnNode = find(record, xCenter, xHigh, yCenter, yHigh);
                         break;
                     case NW:
-                        returnNode = find(coordinate, xLow, xCenter, yCenter, yHigh);
+                        returnNode = find(record, xLow, xCenter, yCenter, yHigh);
                         break;
                     case SW:
-                        returnNode = find(coordinate, xLow, xCenter, yLow, yCenter);
+                        returnNode = find(record, xLow, xCenter, yLow, yCenter);
                         break;
                     case SE:
-                        returnNode = find(coordinate, xCenter, xHigh, yLow, yCenter);
+                        returnNode = find(record, xCenter, xHigh, yLow, yCenter);
                         break;
                     default:
                         // Do Nothing
