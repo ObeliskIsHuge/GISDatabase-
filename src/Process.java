@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *
@@ -98,7 +99,7 @@ public class Process {
                 }
             }
             commandLine = commandFile.readLine();
-            logFile.printLine(header);
+//            logFile.printLine(header);
         }
 
         databaseFile.close();
@@ -111,7 +112,7 @@ public class Process {
      * @param latitude latitude
      * @param longitude longitude
      */
-    private void processWhatIsAt(String latitude, String longitude){
+    private void processWhatIsAt(String latitude, String longitude) throws IOException {
 
         GISRecord gisRecord = new GISRecord();
         gisRecord.setpLatitudeDMS(latitude);
@@ -119,12 +120,19 @@ public class Process {
         HashTuple insertTuple = new HashTuple(gisRecord, 0);
         QuadTreeNode node = quadTree.find(insertTuple);
 
-        if(node == null){
-            logFile.printLine("Record not found");
-        } else {
-
+        if(node != null){
             String data = node.toString();
             logFile.printLine(data);
+        }
+
+        HashTuple poolTuple = bufferPool.find(gisRecord);
+        // Will be true when the pool couldn't find the record
+        if(poolTuple == null){
+            logFile.printLine("Record not found");
+        } else {
+            GISRecord foundRecord = poolTuple.getRecord();
+            logFile.printLine(poolTuple.getSigleOffset() + ": " + foundRecord.getfName() + " " +
+                    foundRecord.getcName() + " " + foundRecord.getsAC());
         }
 
 
@@ -194,6 +202,8 @@ public class Process {
 
         // Reset the file's position
         databaseFile.seek(0);
+        databaseFile.close();
+        bufferPool.openDataBaseFile(fileName);
         importedDatabase.seek(0);
     }
 
@@ -232,20 +242,26 @@ public class Process {
         gisRecord.setfName(name);
         gisRecord.setsAC(state);
         HashTuple insertTuple = new HashTuple(gisRecord, 1);
-        HashTuple foundTuple = hashTable.find(insertTuple);
+        Stack<HashTuple> stack =  hashTable.find(insertTuple);
 
         // Will be true when no record was found
-        if(foundTuple == null){
+        if(stack.size() == 0){
             logFile.printLine("Record not found");
         } else {
-            GISRecord foundRecord = foundTuple.getRecord();
-            logFile.printLine(foundTuple.getSigleOffset() + ":  " +
-                    foundRecord.getcName() + "  " + foundRecord.getpLongitudeDMS() + "  " + foundRecord.getpLatitudeDMS());
+
+            for(HashTuple foundTuple : stack){
+                GISRecord foundRecord = foundTuple.getRecord();
+                logFile.printLine(foundTuple.getSigleOffset() + ":  " +
+                        foundRecord.getcName() + "  " + foundRecord.getpLongitudeDMS() + "  " + foundRecord.getpLatitudeDMS());
+            }
+
         }
 
     }
 
-
+    /***
+     * Processes the "WhatIsIn" command
+     */
     private void processWhatIsIn(){
         logFile.printLine("Need to implement whatIsIn");
     }

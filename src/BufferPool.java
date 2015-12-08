@@ -1,4 +1,8 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.LinkedList;
+
 /**
  *  Class implements the Buffer Pool
  *
@@ -13,6 +17,8 @@ public class BufferPool {
     private int currentSize;
     // holds the maximum size of the buffer pool
     private int maxSize;
+    // Holds the database file
+    private RandomAccessFile databaseFile;
 
 
     /***
@@ -22,6 +28,16 @@ public class BufferPool {
         pool = new LinkedList<>();
         currentSize = 0;
         maxSize = 10;
+        this.databaseFile = null;
+    }
+
+
+    /***
+     * Opens the database file
+     * @param fileName name of the databasefile
+     */
+    public void openDataBaseFile(String fileName) throws FileNotFoundException {
+        this.databaseFile = new RandomAccessFile(fileName, "r");
     }
 
     /***
@@ -99,6 +115,47 @@ public class BufferPool {
         }
 
         return false;
+    }
+
+    /***
+     * Searches the database file for the record at the given coordinates
+     * @param soughtRecord record that contains the coordinates we're searching
+     *                     for
+     * @return record if found
+     *          null otherwise
+     */
+    public HashTuple find(GISRecord soughtRecord) throws IOException {
+
+        // Get rid of first line
+        databaseFile.seek(0);
+        databaseFile.readLine();
+        long offset = databaseFile.getFilePointer();
+        String currentLine = databaseFile.readLine();
+        boolean found = false;
+        LineParser lineParser;
+        GISRecord currentRecord = null;
+
+        // Keeps running until the record is found or the file ends
+        while(!found){
+
+            lineParser = new LineParser(currentLine);
+            currentRecord = lineParser.buildGISRecord();
+
+            // Will be true when the records locations are equal
+            if(soughtRecord.getpLatitudeDMS().equals(currentRecord.getpLatitudeDMS()) &&
+                    soughtRecord.getpLongitudeDMS().equals(currentRecord.getpLongitudeDMS())){
+
+                found = true;
+                break;
+            }
+
+            insert(currentRecord);
+            offset = databaseFile.getFilePointer();
+            currentLine = databaseFile.readLine();
+        }
+
+        databaseFile.seek(0);
+        return new HashTuple(currentRecord , offset);
     }
 
 

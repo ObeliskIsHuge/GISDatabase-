@@ -113,12 +113,13 @@ public class HashTable<T>{
      *         null if the record wasn't found
      */
     @SuppressWarnings("unchecked")
-    public T find(T record){
+    public Stack<T> find(T record){
         // Checks to see if the record is a hashTuple
         if(record instanceof HashTuple){
 
             HashTuple tuple = (HashTuple) record;
             GISRecord gRecord = tuple.getRecord();
+            Stack<T> returnStack = new Stack<>();
             int hashIndex = gRecord.hashCode() % this.tableSize;
 
             // Will be true when the index doesn't exist
@@ -127,15 +128,35 @@ public class HashTable<T>{
                 // Will be true when the records are equal
             }else if (this.table[hashIndex].equals(record)){
                 HashTuple foundTuple = (HashTuple)this.table[hashIndex];
-                foundTuple.clearOffsets();
-                foundTuple.addToOffset(hashIndex);
-                return (T)foundTuple;
+                returnStack.push((T)foundTuple);
+                int sequence = 1;
+                int probeIndex;
+                boolean done = false;
+                T returnValue;
+                // Will run until a location is found
+                while(!done){
+                    probeIndex = hashIndex + computeStepSize(sequence);
+                    // Will be true when we've finally found a location
+                    if(table[probeIndex] == null){
+                        done = true;
+                    } else {
+
+                        HashTuple testTuple = (HashTuple)table[probeIndex];
+                        // Will be true when the records are equal
+                        if(testTuple.equals(tuple)){
+                            returnValue = record;
+                            returnStack.push((T)testTuple);
+                        }
+                        sequence++;
+                    }
+                }
+                return returnStack;
                 // Begins the prob sequence
             } else {
                 int sequence = 1;
                 int probeIndex;
                 boolean found = false;
-                T returnValue = null;
+                T returnValue;
                 // Will run until a location is found
                 while(!found){
 
@@ -143,19 +164,19 @@ public class HashTable<T>{
                     // Will be true when we've finally found a location
                     if(table[probeIndex] == null){
                         found = true;
-                        returnValue = null;
                     } else {
 
                         HashTuple testTuple = (HashTuple)table[probeIndex];
                         // Will be true when the records are equal
                         if(testTuple.equals(tuple)){
                             returnValue = record;
+                            returnStack.push(returnValue);
                             found = true;
                         }
                         sequence++;
                     }
                 }
-                return returnValue;
+                return returnStack;
             }
         }
         return null;
