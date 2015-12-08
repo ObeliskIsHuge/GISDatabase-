@@ -20,7 +20,7 @@ public class Process {
     private FileOutput logFile;
     // Creates the buffer pool
     private BufferPool bufferPool;
-    // Creates the Quad Treee
+    // Creates the Quad Tree
     private QuadTree<HashTuple> quadTree;
     // Creates the HashTable
     private HashTable<HashTuple> hashTable;
@@ -52,6 +52,8 @@ public class Process {
 
         String commandLine = commandFile.readLine();
         int commandCount = 1;
+        String header = "-------------------------------------";
+
 
         // Keeps running until there aren't any more commands
         while(commandLine != null){
@@ -64,6 +66,7 @@ public class Process {
                 if(pieces[0].equals("world")){
                     logFile.printLine(commandLine + "\n");
                 } else {
+                    logFile.printLine(header);
                     logFile.printLine("Command " + commandCount + ": "  +commandLine + "\n");
                     commandCount++;
                 }
@@ -95,6 +98,7 @@ public class Process {
                 }
             }
             commandLine = commandFile.readLine();
+            logFile.printLine(header);
         }
 
         databaseFile.close();
@@ -150,7 +154,6 @@ public class Process {
     private void processImport(String fileName) throws IOException {
 
         databaseFile = new RandomAccessFile(fileName, "r");
-
         // Skip the first line
         databaseFile.readLine();
         String line = databaseFile.readLine();
@@ -227,7 +230,7 @@ public class Process {
 
         GISRecord gisRecord = new GISRecord();
         gisRecord.setfName(name);
-        gisRecord.setfName(state);
+        gisRecord.setsAC(state);
         HashTuple insertTuple = new HashTuple(gisRecord, 1);
         HashTuple foundTuple = hashTable.find(insertTuple);
 
@@ -235,7 +238,9 @@ public class Process {
         if(foundTuple == null){
             logFile.printLine("Record not found");
         } else {
-            logFile.printLine(foundTuple.toString());
+            GISRecord foundRecord = foundTuple.getRecord();
+            logFile.printLine(foundTuple.getSigleOffset() + ":  " +
+                    foundRecord.getcName() + "  " + foundRecord.getpLongitudeDMS() + "  " + foundRecord.getpLatitudeDMS());
         }
 
     }

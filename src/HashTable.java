@@ -83,7 +83,7 @@ public class HashTable<T>{
                 // Will run until a location is found
                 while(!found){
 
-                    probeIndex = hashIndex + computeStepSize(sequence);
+                    probeIndex = (hashIndex + computeStepSize(sequence)) % this.tableSize;
                     // Will be true when we've finally found a location
                     if(table[probeIndex] == null){
                         found = true;
@@ -112,6 +112,7 @@ public class HashTable<T>{
      * @return record if found
      *         null if the record wasn't found
      */
+    @SuppressWarnings("unchecked")
     public T find(T record){
         // Checks to see if the record is a hashTuple
         if(record instanceof HashTuple){
@@ -125,7 +126,10 @@ public class HashTable<T>{
                 return null;
                 // Will be true when the records are equal
             }else if (this.table[hashIndex].equals(record)){
-                return record;
+                HashTuple foundTuple = (HashTuple)this.table[hashIndex];
+                foundTuple.clearOffsets();
+                foundTuple.addToOffset(hashIndex);
+                return (T)foundTuple;
                 // Begins the prob sequence
             } else {
                 int sequence = 1;

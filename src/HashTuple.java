@@ -72,6 +72,13 @@ public class HashTuple {
     }
 
     /***
+     * Removes all the offsets from the array list
+     */
+    public void clearOffsets(){
+        this.offsets.clear();
+    }
+
+    /***
      * Will be true when the coordinate equals the coordinate of the tuple
      * @param comparedGeo coordinate that will be compared
      * @return true if the coordinates are equal

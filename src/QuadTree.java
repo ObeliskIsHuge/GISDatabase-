@@ -248,7 +248,6 @@ public class QuadTree<T> {
                 // iterates over the entire bucket array
                 for(T inputTuple: this.buckets){
                     HashTuple returnTuple = (HashTuple) inputTuple;
-
                     if(returnTuple.compareCoordinate(geoCoordinate)){
                         returnLeaf.addToBucket(returnTuple);
                     }
@@ -460,16 +459,16 @@ public class QuadTree<T> {
                 Direction recordDirection = whichDirection(null, geoCoordinate, xLow, xHigh, yLow, yHigh);
                 switch (recordDirection){
                     case NE:
-                        returnNode = find(record, xCenter, xHigh, yCenter, yHigh);
+                        returnNode = this.northEast.find(record, xCenter, xHigh, yCenter, yHigh);
                         break;
                     case NW:
-                        returnNode = find(record, xLow, xCenter, yCenter, yHigh);
+                        returnNode = this.northWest.find(record, xLow, xCenter, yCenter, yHigh);
                         break;
                     case SW:
-                        returnNode = find(record, xLow, xCenter, yLow, yCenter);
+                        returnNode = this.southWest.find(record, xLow, xCenter, yLow, yCenter);
                         break;
                     case SE:
-                        returnNode = find(record, xCenter, xHigh, yLow, yCenter);
+                        returnNode = this.southEast.find(record, xCenter, xHigh, yLow, yCenter);
                         break;
                     default:
                         // Do Nothing
