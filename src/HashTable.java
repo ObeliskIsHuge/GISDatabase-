@@ -173,7 +173,7 @@ public class HashTable<T>{
                         // Will be true when the records are equal
                         if(testTuple.equals(tuple)){
                             returnValue = record;
-                            returnStack.push(returnValue);
+                            returnStack.push((T)testTuple);
                             found = true;
                         }
                         sequence++;

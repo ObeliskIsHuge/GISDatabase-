@@ -256,8 +256,10 @@ public class Process {
 
             for(HashTuple foundTuple : stack){
                 GISRecord foundRecord = foundTuple.getRecord();
-                logFile.printLine(foundTuple.getSigleOffset() + ":  " +
-                        foundRecord.getcName() + "  " + foundRecord.getpLongitudeDMS() + "  " + foundRecord.getpLatitudeDMS());
+                String printString = foundTuple.getSigleOffset() + ":  " +
+                        foundRecord.getcName() + "  " + foundRecord.getpLongitudeDMS() + "  " + foundRecord.getpLatitudeDMS();
+                logFile.printLine(printString);
+                bufferPool.insert(foundRecord);
             }
 
         }

@@ -104,17 +104,16 @@ public class BufferPool {
      * @return true if the record was deleted
      *         false otherwise
      */
-    public boolean remove(GISRecord record){
+    public GISRecord remove(GISRecord record){
 
         int index = pool.indexOf(record);
         // Will be true when the record exists in the pool
         if(index != -1){
             currentSize--;
-            pool.remove(index);
-            return true;
+            return pool.remove(index);
         }
 
-        return false;
+        return null;
     }
 
     /***
@@ -126,20 +125,31 @@ public class BufferPool {
      */
     public HashTuple find(GISRecord soughtRecord) throws IOException {
 
-        // Get rid of first line
         databaseFile.seek(0);
         databaseFile.readLine();
+        GISRecord currentRecord = null;
+        boolean recordFound = false;
         long offset = databaseFile.getFilePointer();
+        // Will be true when the record exists in the pool
+        if(exists(soughtRecord)){
+            currentRecord = remove(soughtRecord);
+            insert(currentRecord);
+            recordFound = true;
+        }
+
+        // Get rid of first line
         String currentLine = databaseFile.readLine();
         boolean found = false;
         LineParser lineParser;
-        GISRecord currentRecord = null;
 
         // Keeps running until the record is found or the file ends
         while(!found && currentLine != null){
 
             lineParser = new LineParser(currentLine);
-            currentRecord = lineParser.buildGISRecord();
+            // Will be true when the record didn't exist in the pool
+            if(!recordFound){
+                currentRecord = lineParser.buildGISRecord();
+            }
 
             // Will be true when the records locations are equal
             if(soughtRecord.getpLatitudeDMS().equals(currentRecord.getpLatitudeDMS()) &&
@@ -155,6 +165,8 @@ public class BufferPool {
         }
 
         databaseFile.seek(0);
+
+
         return new HashTuple(currentRecord , offset);
     }
 
@@ -170,7 +182,7 @@ public class BufferPool {
         GISRecord currentRecord;
         // Handles the pool in reverse
         for(int i = pool.size(); i > 0; i--){
-            currentRecord = pool.get(i);
+            currentRecord = pool.get(i - 1);
             stringBuilder.append(currentRecord.toString() + "\n");
         }
         stringBuilder.append("LRU\n");
