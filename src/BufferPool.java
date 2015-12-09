@@ -136,7 +136,7 @@ public class BufferPool {
         GISRecord currentRecord = null;
 
         // Keeps running until the record is found or the file ends
-        while(!found){
+        while(!found && currentLine != null){
 
             lineParser = new LineParser(currentLine);
             currentRecord = lineParser.buildGISRecord();
@@ -156,6 +156,25 @@ public class BufferPool {
 
         databaseFile.seek(0);
         return new HashTuple(currentRecord , offset);
+    }
+
+
+    /***
+     * Prints the String in a MRU to LRU fashion
+     * @return String that contains info about the BufferPool
+     */
+    public String toString(){
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        stringBuilder.append("MRU\n");
+        GISRecord currentRecord;
+        // Handles the pool in reverse
+        for(int i = pool.size(); i > 0; i--){
+            currentRecord = pool.get(i);
+            stringBuilder.append(currentRecord.toString() + "\n");
+        }
+        stringBuilder.append("LRU\n");
+        return stringBuilder.toString();
     }
 
 

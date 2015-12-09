@@ -17,6 +17,8 @@ public class HashTable<T>{
     private int resizeCount;
     // holds the size of the table
     private int tableSize;
+    // Holds the type of class for the table
+    private Class genericClass;
 
 
     /****
@@ -31,6 +33,7 @@ public class HashTable<T>{
 
         table = (T[]) Array.newInstance(tClass, tableSize);
         fillCount = 0;
+        genericClass = tClass;
         resizeCount = (int)Math.floor(tableSize * .70);
         this.tableSize = tableSize;
     }
@@ -135,7 +138,7 @@ public class HashTable<T>{
                 T returnValue;
                 // Will run until a location is found
                 while(!done){
-                    probeIndex = hashIndex + computeStepSize(sequence);
+                    probeIndex = (hashIndex + computeStepSize(sequence)) % this.tableSize;
                     // Will be true when we've finally found a location
                     if(table[probeIndex] == null){
                         done = true;
@@ -160,7 +163,7 @@ public class HashTable<T>{
                 // Will run until a location is found
                 while(!found){
 
-                    probeIndex = hashIndex + computeStepSize(sequence);
+                    probeIndex = (hashIndex + computeStepSize(sequence)) % this.tableSize;
                     // Will be true when we've finally found a location
                     if(table[probeIndex] == null){
                         found = true;
@@ -236,9 +239,9 @@ public class HashTable<T>{
             }
         }
 
-        Class currentClass = getClass();
+//        Class currentClass = getClass();
         this.tableSize =  this.tableSize  * 2;
-        this.table = (T[]) Array.newInstance(currentClass, this.tableSize);
+        this.table = (T[]) Array.newInstance(genericClass, this.tableSize);
         this.fillCount = 0;
         this.resizeCount = (int)Math.floor(tableSize * .70);
 

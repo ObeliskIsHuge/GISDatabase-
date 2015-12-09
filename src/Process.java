@@ -214,8 +214,10 @@ public class Process {
     private void processDebug(String structure){
 
         String printString;
+        // prints the quad
         if(structure.equals("quad")){
             System.out.println("Need to figure out debug for Quad");
+            // Prints the contents of the hash
         } else if(structure.equals("hash")){
 
             // Build header content
@@ -226,7 +228,10 @@ public class Process {
 
             printString += hashTable.buildArrayContents();
             logFile.printLine(printString);
-        } else {
+            // Prints the contents of the buffer pool
+        } else if(structure.equals("pool")){
+            logFile.printLine(bufferPool.toString());
+        }else {
             System.out.println("Need to figure out debug for pool");
         }
     }
@@ -245,7 +250,7 @@ public class Process {
         Stack<HashTuple> stack =  hashTable.find(insertTuple);
 
         // Will be true when no record was found
-        if(stack.size() == 0){
+        if(stack == null || stack.size() == 0){
             logFile.printLine("Record not found");
         } else {
 

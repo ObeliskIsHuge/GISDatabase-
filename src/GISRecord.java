@@ -454,4 +454,13 @@ public class GISRecord {
         return new GeoCoordinate(this.pLatitudeDMS , this.pLongitudeDMS);
     }
 
+
+    /***
+     * Displays the most valuable information about the Record
+     * @return String that contains the most valuable data
+     */
+    public String toString(){
+        return this.fId + " " + fName + " " + fClass + " " + sAC + " " + sNC;
+    }
+
 }
