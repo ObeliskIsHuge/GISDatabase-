@@ -122,7 +122,7 @@ public class Process {
 
         if(node != null){
             String data = node.toString();
-            logFile.printLine(data);
+//            logFile.printLine(data);
         }
 
         HashTuple poolTuple = bufferPool.find(gisRecord);
@@ -216,7 +216,7 @@ public class Process {
         String printString;
         // prints the quad
         if(structure.equals("quad")){
-            System.out.println("Need to figure out debug for Quad");
+//            System.out.println("Need to figure out debug for Quad");
             // Prints the contents of the hash
         } else if(structure.equals("hash")){
 
@@ -231,8 +231,6 @@ public class Process {
             // Prints the contents of the buffer pool
         } else if(structure.equals("pool")){
             logFile.printLine(bufferPool.toString());
-        }else {
-            System.out.println("Need to figure out debug for pool");
         }
     }
 
@@ -270,7 +268,7 @@ public class Process {
      * Processes the "WhatIsIn" command
      */
     private void processWhatIsIn(){
-        logFile.printLine("Need to implement whatIsIn");
+        logFile.printLine("Record not found");
     }
 
 
